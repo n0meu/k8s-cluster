@@ -24,13 +24,6 @@ containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
 
 # in /etc/containerd/config.toml (currently in line 125) look for the section [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options] and change "SystemdCgroup = false" to "SystemdCgroup = true"
 sed -i '/SystemdCgroup = false/ s/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-sed -i '/sandbox_image = "registry.k8s.io/pause:3.6"/ s/sandbox_image = "registry.k8s.io/pause:3.6"/sandbox_image = "registry.k8s.io/pause:3.9"/' /etc/containerd/config.toml
+sed -i '/sandbox_image = "registry\.k8s\.io\/pause:3\.6"/ s/sandbox_image = "registry\.k8s\.io\/pause:3\.6"/sandbox_image = "registry.k8s.io\/pause:3.9"/' /etc/containerd/config.toml
 sudo systemctl restart containerd
 sudo systemctl enable containerd
-
-# ALL - add kubernetes apt repository
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-sudo apt update
-sudo apt install kubelet kubeadm kubectl -y
-sudo apt-mark hold kubelet kubeadm kubectl
