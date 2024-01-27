@@ -21,7 +21,7 @@ then
 else
     # ALL - install sudo curl gpg
     apt update && apt upgrade -y
-    apt install -y sudo curl gpg ufw
+    apt install -y sudo curl gpg ufw git
 
     ufw allow 22/tcp
 
