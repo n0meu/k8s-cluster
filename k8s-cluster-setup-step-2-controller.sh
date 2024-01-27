@@ -1,8 +1,8 @@
 #!/bin/bash
 
-MASTER=$(hostname -f)
+CONTROLLER=$(hostname -f)
 
-# MASTER - firewall 
+# CONTROLLER - firewall 
     # Kubernetes API server
     sudo ufw allow 6443/tcp
     # etcd
@@ -19,21 +19,21 @@ MASTER=$(hostname -f)
 
 ./k8s-cluster-partial-kubelet-kubeadm-kubectl.sh
 
-# MASTER - Install Kubernetes Cluster with Kubeadm
-cat <<EOF > ./kubelet-master.yaml
+# CONTROLLER - Install Kubernetes Cluster with Kubeadm
+cat <<EOF > ./kubelet-controller.yaml
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 kubernetesVersion: "1.28.0"
-controlPlaneEndpoint: "$MASTER"
+controlPlaneEndpoint: "$CONTROLLER"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 EOF
 
-sudo kubeadm init --config kubelet-master.yaml
+sudo kubeadm init --config kubelet-controller.yaml
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
